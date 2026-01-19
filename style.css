@@ -76,4 +76,24 @@ body {
     margin-top: 15px; width: 90%; height: 60px; 
     background: #f8f9fa; border: 1px solid #ddd; 
     overflow-y: auto; font-size: 0.75rem; text-align: left; padding: 5px;
+
+}
+/* --- 추가된 스타일 (버튼 그룹 & 보조 버튼) --- */
+.btn-group {
+    display: flex; gap: 5px; margin-top: 10px; width: 100%;
+}
+.btn-group button {
+    flex: 1; /* 반반씩 공간 차지 */
+    padding: 8px 0;
+}
+.btn-secondary {
+    background: #95a5a6; color: white; border: none; border-radius: 5px; cursor: pointer;
+    font-family: 'Noto Sans KR';
+}
+.btn-secondary:hover { background: #7f8c8d; }
+
+/* 총 자산 표시용 (강조) */
+.stat-item.total-asset {
+    border-top: 2px solid #eee; margin-top: 5px; padding-top: 5px;
+    color: #2c3e50;
 }
