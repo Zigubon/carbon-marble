@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESG City Tycoon V2.1</title>
+    <title>ESG City V2.2</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
         <div class="main-area">
             <header class="hud">
                 <div class="hud-top">
-                    <span class="logo">🏙️ ESG City</span>
+                    <span class="logo">🏙️ ESG City V2</span>
                     <span class="week-badge">Week <span id="ui-week">1</span></span>
                 </div>
                 <div class="stats-bar">
@@ -24,30 +24,38 @@
             </header>
 
             <main class="city-viewport">
-                <div class="city-grid" id="city-grid">
-                    </div>
+                <div class="city-grid" id="city-grid"></div>
             </main>
 
             <footer class="msg-bar">
-                <div id="ui-message">우측 패널에서 건물을 선택하고 땅을 클릭하세요!</div>
+                <div id="ui-message">도시를 재건하세요!</div>
             </footer>
         </div>
 
         <aside class="side-panel">
-            <div class="panel-header">🏗️ 건설 메뉴</div>
-            
-            <div class="tab-group">
-                <button class="tab-btn active" onclick="game.filterBuild('growth')">성장</button>
-                <button class="tab-btn" onclick="game.filterBuild('energy')">에너지</button>
-                <button class="tab-btn" onclick="game.filterBuild('circular')">순환</button>
-                <button class="tab-btn" onclick="game.filterBuild('infra')">인프라</button>
+            <div class="main-tabs">
+                <button class="main-tab-btn active" onclick="game.switchMainTab('build')">🏗️ 건설</button>
+                <button class="main-tab-btn" onclick="game.switchMainTab('log')">📜 기록</button>
             </div>
 
-            <div class="building-list" id="building-list">
+            <div id="panel-build" class="panel-content">
+                <div class="sub-tabs">
+                    <button class="sub-tab-btn active" data-type="growth" onclick="game.filterBuild('growth')">성장</button>
+                    <button class="sub-tab-btn" data-type="energy" onclick="game.filterBuild('energy')">에너지</button>
+                    <button class="sub-tab-btn" data-type="circular" onclick="game.filterBuild('circular')">순환</button>
+                    <button class="sub-tab-btn" data-type="infra" onclick="game.filterBuild('infra')">인프라</button>
                 </div>
+                <div class="building-list" id="building-list"></div>
+            </div>
+
+            <div id="panel-log" class="panel-content hidden">
+                <div class="log-list" id="log-list">
+                    <div class="log-item">게임이 시작되었습니다.</div>
+                </div>
+            </div>
 
             <div class="panel-footer">
-                <button id="btn-cancel-select" class="btn-secondary hidden" onclick="game.cancelSelection()">선택 취소 (ESC)</button>
+                <button id="btn-cancel-select" class="btn-secondary hidden" onclick="game.cancelSelection()">선택 취소</button>
                 <button id="btn-next-week" class="btn-main">📅 주간 정산</button>
             </div>
         </aside>
