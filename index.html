@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Net Zero City</title>
+    <title>Net Zero City V2.5</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -27,18 +27,18 @@
                 <div id="tooltip" class="tooltip hidden"></div>
                 
                 <div class="game-guide">
-                    <h4>ℹ️ 시장님을 위한 팁</h4>
+                    <h4>ℹ️ 플레이 가이드</h4>
                     <ul>
-                        <li><strong>☠️ 스모그 효과:</strong> 공장끼리 붙여 지으면 오염이 심해져 <strong>배출량이 증가</strong>합니다.</li>
-                        <li><strong>🏗️ 철거/재건축:</strong> 기존 건물을 클릭하면 철거할 수 있습니다. (오염 유산은 필수 철거!)</li>
-                        <li><strong>⚡ 전력 관리:</strong> 전력이 부족하면 유지비가 폭증합니다.</li>
-                        <li><strong>💸 파산 주의:</strong> 연말 정산 시 자금이 바닥나면 게임이 종료됩니다.</li>
+                        <li><strong>⚡ 전력:</strong> 부족하면 유지비가 폭증합니다.</li>
+                        <li><strong>☠️ 스모그:</strong> 배출 건물이 붙으면 오염이 심해집니다.</li>
+                        <li><strong>🏗️ 철거:</strong> 기존 건물을 클릭해 철거/재건축 하세요.</li>
+                        <li><strong>🏁 목표:</strong> 파산하지 않고 15년을 버티세요.</li>
                     </ul>
                 </div>
             </main>
 
             <footer class="msg-bar">
-                <div id="ui-message">도시를 재건하세요!</div>
+                <div id="ui-message">리더를 선택하고 도시를 재건하세요!</div>
             </footer>
         </div>
 
@@ -72,6 +72,15 @@
                 <button id="btn-next-week" class="btn-main">📅 연말 정산 (Next Year)</button>
             </div>
         </aside>
+    </div>
+
+    <div id="leader-modal" class="modal">
+        <div class="modal-content leader-content">
+            <h2>👤 도시의 리더를 선택하세요</h2>
+            <p>선택한 리더의 능력에 따라 운영 방식이 달라집니다.</p>
+            <div class="leader-grid" id="leader-list">
+                </div>
+        </div>
     </div>
 
     <div id="report-modal" class="modal hidden">
