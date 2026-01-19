@@ -18,7 +18,6 @@ body {
 .layout-container { display: flex; width: 100%; height: 100%; }
 .main-area { flex: 1; display: flex; flex-direction: column; background: #74b9ff; position: relative; }
 
-/* HUD */
 .hud {
     background: rgba(0,0,0,0.85); color: white; padding: 10px 20px;
     display: flex; justify-content: space-between; align-items: center; z-index: 10;
@@ -30,7 +29,6 @@ body {
 .stat-item { cursor: help; }
 .danger { color: #ff7675; }
 
-/* 맵 & 툴팁 */
 .city-viewport { flex: 1; overflow: auto; display: flex; justify-content: center; align-items: center; padding: 40px; position: relative; }
 .city-grid {
     display: grid;
@@ -53,7 +51,6 @@ body {
 .tile[data-type="infra"] { background-color: #fab1a0; }
 .tile[data-type="legacy"] { background-color: #636e72; border: 2px dashed #d63031; }
 
-/* 툴팁 스타일 */
 .tooltip {
     position: absolute; background: rgba(0, 0, 0, 0.9); color: white;
     padding: 10px; border-radius: 6px; font-size: 0.85rem; pointer-events: none;
@@ -63,7 +60,6 @@ body {
 .tooltip h4 { margin: 0 0 5px 0; color: #ffeaa7; border-bottom: 1px solid #555; padding-bottom: 3px; }
 .hidden { display: none !important; }
 
-/* 게임 가이드 박스 */
 .game-guide {
     position: absolute; bottom: 20px; right: 20px; width: 280px;
     background: rgba(255, 255, 255, 0.95); padding: 15px;
@@ -75,7 +71,6 @@ body {
 
 .msg-bar { background: rgba(255,255,255,0.95); padding: 10px; text-align: center; font-weight: bold; border-top: 1px solid #ccc; }
 
-/* 사이드바 */
 .side-panel { width: var(--sidebar-w); background: #f1f2f6; border-left: 2px solid #ccc; display: flex; flex-direction: column; z-index: 20; }
 .main-tabs { display: flex; background: var(--dark); }
 .main-tab-btn { flex: 1; padding: 12px; background: transparent; border: none; color: #aaa; font-weight: bold; cursor: pointer; border-bottom: 3px solid transparent; }
@@ -87,7 +82,6 @@ body {
 
 .building-list, .log-list { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
 
-/* 리스트 아이템 공통 */
 .build-item, .research-item {
     background: white; border: 2px solid transparent; border-radius: 8px;
     padding: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px;
@@ -104,9 +98,8 @@ body {
 .bi-cost { color: #e67e22; font-weight: bold; font-size: 0.85rem; }
 .bi-desc { font-size: 0.7rem; color: #888; display: block; }
 
-/* 에너지/탄소 표시 */
-.stat-pos { color: #2ecc71; font-weight: bold; font-size: 0.75rem; } /* 생산/감축 */
-.stat-neg { color: #e74c3c; font-weight: bold; font-size: 0.75rem; } /* 소비/배출 */
+.stat-pos { color: #2ecc71; font-weight: bold; font-size: 0.75rem; }
+.stat-neg { color: #e74c3c; font-weight: bold; font-size: 0.75rem; }
 
 .log-item { background: white; padding: 8px; border-radius: 6px; font-size: 0.85rem; border-left: 3px solid #ccc; }
 .log-item.bad { border-left-color: #e74c3c; background: #fff5f5; }
@@ -117,7 +110,6 @@ body {
 .btn-main:hover { background: #0652dd; }
 .btn-secondary { background: #95a5a6; color: white; width: 100%; padding: 10px; border:none; border-radius:6px; cursor:pointer;}
 
-/* 모달 */
 .modal { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:flex; justify-content:center; align-items:center; z-index:100;}
 .modal-content { background:white; padding:25px; border-radius:10px; width:400px; text-align:center; }
 .report-row { display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px dashed #ddd; }
