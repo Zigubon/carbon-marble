@@ -1,9 +1,36 @@
+// [DATA] 게임 밸런스 데이터 V2.5
+
 export const GAME_CONFIG = {
-    START_MONEY: 450,
+    START_MONEY: 500,   // 자금 상향 (450 -> 500)
     START_REP: 10,
     MAX_YEARS: 15,
     TAX_RATE_BASE: 1,
 };
+
+// 리더 (직업) 데이터
+export const LEADERS = [
+    { 
+        id: 'energy_expert', 
+        name: '에너지 전문가', 
+        icon: '⚡', 
+        desc: '효율적인 전력망 설계를 중시합니다.',
+        buff: '에너지 건물 건설비 -20%'
+    },
+    { 
+        id: 'climate_expert', 
+        name: '기후 전문가', 
+        icon: '🌱', 
+        desc: '환경 규제 대응에 탁월합니다.',
+        buff: '매년 탄소세 50% 감면'
+    },
+    { 
+        id: 'economy_expert', 
+        name: '경제 전문가', 
+        icon: '💰', 
+        desc: '도시의 수익성을 극대화합니다.',
+        buff: '모든 건물 수익 +15%'
+    }
+];
 
 export const RESEARCH = [
     { id: 'smart_grid', name: '스마트 그리드', cost: 200, icon: '📡', desc: '전력 효율 증가 및 대형 발전소 해금' },
@@ -15,7 +42,7 @@ export const RESEARCH = [
 export const BUILDINGS = [
     { id: 'town_hall', name: '시청', icon: '🏛️', type: 'infra', cost: 0, rev: 15, exp: 0, emit: 0, power: 5, res: 1, desc: '도시의 심장' },
     
-    // 오염 유산들
+    // 오염 유산
     { id: 'landfill', name: '매립지', icon: '🗑️', type: 'legacy', cost: 0, rev: 0, exp: 5, emit: 15, power: 0, res: 0, rep: -3, demolishCost: 50, desc: '철거비용 50억' },
     { id: 'old_factory', name: '노후공장', icon: '🏭', type: 'legacy', cost: 0, rev: 10, exp: 5, emit: 20, power: -5, res: 0, demolishCost: 40, desc: '철거비용 40억' },
     { id: 'flood_house', name: '침수주택', icon: '🏚️', type: 'legacy', cost: 0, rev: 2, exp: 2, emit: 2, power: -1, res: -2, demolishCost: 30, desc: '철거비용 30억' },
