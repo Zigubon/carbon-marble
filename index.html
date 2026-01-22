@@ -3,10 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Net Zero City V2.5</title>
+    <title>Net Zero City V3.0</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="intro-screen" class="intro-overlay">
+        <div class="intro-content">
+            <h1 class="intro-logo">🏙️ Net Zero City</h1>
+            <p class="intro-desc">당신은 새로 부임한 시장입니다.<br>파산하지 않고 15년 동안 탄소 중립 도시를 만드세요.</p>
+            
+            <div class="intro-guide">
+                <h3>🎮 게임 방법</h3>
+                <ul>
+                    <li><strong>🏗️ 건설:</strong> 우측 패널에서 건물을 선택하고 땅을 클릭하세요.</li>
+                    <li><strong>⚡ 전력:</strong> 대형 건물은 전력을 많이 소모합니다. 발전소를 먼저 지으세요.</li>
+                    <li><strong>📐 대형 건물:</strong> 2x2 건물은 넓은 땅이 필요합니다.</li>
+                    <li><strong>🎲 이벤트:</strong> 매년 말, 룰렛을 돌려 랜덤 이벤트가 발생합니다.</li>
+                </ul>
+            </div>
+
+            <div class="intro-leader">
+                <h3>👤 리더 선택</h3>
+                <div class="leader-select-grid" id="intro-leader-list">
+                    </div>
+            </div>
+            
+            <button id="btn-start-game" class="btn-start" disabled>리더를 선택해주세요</button>
+        </div>
+    </div>
+
     <div class="layout-container">
         <div class="main-area">
             <header class="hud">
@@ -26,19 +51,13 @@
                 <div class="city-grid" id="city-grid"></div>
                 <div id="tooltip" class="tooltip hidden"></div>
                 
-                <div class="game-guide">
-                    <h4>ℹ️ 플레이 가이드</h4>
-                    <ul>
-                        <li><strong>⚡ 전력:</strong> 부족하면 유지비가 폭증합니다.</li>
-                        <li><strong>☠️ 스모그:</strong> 배출 건물이 붙으면 오염이 심해집니다.</li>
-                        <li><strong>🏗️ 철거:</strong> 기존 건물을 클릭해 철거/재건축 하세요.</li>
-                        <li><strong>🏁 목표:</strong> 파산하지 않고 15년을 버티세요.</li>
-                    </ul>
+                <div class="game-guide-mini">
+                    <small>Tip: 우측클릭으로 건설 취소</small>
                 </div>
             </main>
 
             <footer class="msg-bar">
-                <div id="ui-message">리더를 선택하고 도시를 재건하세요!</div>
+                <div id="ui-message">도시를 재건하세요!</div>
             </footer>
         </div>
 
@@ -68,24 +87,28 @@
             </div>
 
             <div class="panel-footer">
-                <button id="btn-cancel-select" class="btn-secondary hidden" onclick="game.cancelSelection()">선택 취소</button>
-                <button id="btn-next-week" class="btn-main">📅 연말 정산 (Next Year)</button>
+                <button id="btn-cancel-select" class="btn-secondary hidden" onclick="game.cancelSelection()">선택 취소 (ESC)</button>
+                <button id="btn-next-week" class="btn-main">📅 연말 정산</button>
             </div>
         </aside>
     </div>
 
-    <div id="leader-modal" class="modal">
-        <div class="modal-content leader-content">
-            <h2>👤 도시의 리더를 선택하세요</h2>
-            <p>선택한 리더의 능력에 따라 운영 방식이 달라집니다.</p>
-            <div class="leader-grid" id="leader-list">
-                </div>
+    <div id="roulette-modal" class="modal hidden">
+        <div class="modal-content roulette-content">
+            <h3>📅 연말 이벤트 추첨</h3>
+            <div class="roulette-box">
+                <div id="roulette-display" class="roulette-text">🎲 이벤트를 추첨중...</div>
+            </div>
+            <div id="roulette-result" class="hidden">
+                <p id="roulette-desc" class="event-desc"></p>
+                <button class="btn-main" onclick="game.finishYear()">결과 확인</button>
+            </div>
         </div>
     </div>
 
     <div id="report-modal" class="modal hidden">
         <div class="modal-content report-content">
-            <h3>📅 연말 결산 리포트</h3>
+            <h3>📊 연말 결산 리포트</h3>
             <div id="report-details" class="report-body"></div>
             <button class="btn-main" onclick="closeReport()">다음 해 시작</button>
         </div>
