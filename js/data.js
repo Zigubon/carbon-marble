@@ -1,13 +1,13 @@
-// [DATA] 게임 밸런스 데이터 (Final)
+// [DATA] Net Zero City V3.0 데이터베이스
 
 export const GAME_CONFIG = {
-    START_MONEY: 500,   // 초기 자금 (난이도 완화)
+    START_MONEY: 500,   // 초기 자금 (500억)
     START_REP: 10,      // 초기 만족도
-    MAX_YEARS: 15,      // 15년 엔딩
-    TAX_RATE_BASE: 1,   // 탄소세율 (톤당 1억)
+    MAX_YEARS: 15,      // 게임 기간 (15년)
+    TAX_RATE_BASE: 1,   // 초기 탄소세율 (톤당 1억)
 };
 
-// 1. 리더 (직업) 데이터
+// 1. 리더 (직업) 데이터 - 게임 시작 시 선택
 export const LEADERS = [
     { 
         id: 'energy_expert', 
@@ -40,22 +40,26 @@ export const RESEARCH = [
     { id: 'adv_energy', name: '차세대 에너지', cost: 300, icon: '⚛️', desc: 'SMR(소형원전) 건설 허가', req: 'smart_grid' }
 ];
 
-// 3. 건물 목록 (w:가로, h:세로)
+// 3. 건물 목록
+// w: 가로 크기, h: 세로 크기 (1x1, 2x1, 2x2 등)
+// reqTech: 건설에 필요한 연구 ID
 export const BUILDINGS = [
     // [0] 기본 및 오염 유산 (건설 메뉴 X)
     { id: 'forest', name: '숲', icon: '🌲', type: 'forest', cost: 0, rev: 0, exp: 0, emit: -2, power: 0, w:1, h:1, desc: '자연 정화' },
     { id: 'town_hall', name: '시청', icon: '🏛️', type: 'infra', cost: 0, rev: 15, exp: 0, emit: 0, power: 5, w:1, h:1, desc: '도시의 심장' },
+    
+    // 오염 유산 (철거 비용 있음)
     { id: 'landfill', name: '매립지', icon: '🗑️', type: 'legacy', cost: 0, rev: 0, exp: 5, emit: 15, power: 0, demolishCost: 50, w:1, h:1, desc: '철거비 50억' },
     { id: 'old_factory', name: '노후공장', icon: '🏭', type: 'legacy', cost: 0, rev: 10, exp: 5, emit: 20, power: -5, demolishCost: 40, w:1, h:1, desc: '철거비 40억' },
     { id: 'flood_house', name: '침수주택', icon: '🏚️', type: 'legacy', cost: 0, rev: 2, exp: 2, emit: 2, power: -1, demolishCost: 30, w:1, h:1, desc: '철거비 30억' },
 
     // [1] 성장 (Growth) - 돈을 버는 건물
     { id: 'shop_s', name: '소형상가', icon: '🏪', type: 'growth', cost: 40, rev: 12, exp: 3, emit: 4, power: -2, w:1, h:1, desc: '동네 상권' },
-    { id: 'shop_l', name: '대형몰', icon: '🏬', type: 'growth', cost: 120, rev: 50, exp: 12, emit: 15, power: -8, w:2, h:2, desc: '2x2 대형 상권' },
     { id: 'office', name: '오피스', icon: '🏢', type: 'growth', cost: 80, rev: 25, exp: 8, emit: 8, power: -5, w:1, h:1, desc: '안정적 수익' },
-    { id: 'logistics', name: '물류허브', icon: '🚛', type: 'growth', cost: 150, rev: 65, exp: 20, emit: 25, power: -10, w:1, h:1, desc: '고수익 고오염' },
-    { id: 'industry_h', name: '중공업단지', icon: '🏭', type: 'growth', cost: 200, rev: 95, exp: 30, emit: 40, power: -20, w:2, h:1, desc: '2x1 오염원' },
-    { id: 'data_center', name: '데이터센터', icon: '💾', type: 'growth', cost: 250, rev: 110, exp: 40, emit: 10, power: -35, w:1, h:1, desc: '전력 대량 소모', reqTech: 'smart_grid' },
+    { id: 'shop_l', name: '대형몰', icon: '🏬', type: 'growth', cost: 150, rev: 60, exp: 15, emit: 20, power: -10, w:2, h:2, desc: '2x2 대형 상권' },
+    { id: 'logistics', name: '물류허브', icon: '🚛', type: 'growth', cost: 150, rev: 65, exp: 20, emit: 25, power: -10, w:2, h:1, desc: '2x1 물류단지' },
+    { id: 'industry_h', name: '중공업단지', icon: '🏭', type: 'growth', cost: 200, rev: 95, exp: 30, emit: 40, power: -20, w:2, h:1, desc: '2x1 고오염' },
+    { id: 'data_center', name: '데이터센터', icon: '💾', type: 'growth', cost: 250, rev: 110, exp: 40, emit: 10, power: -35, w:1, h:1, desc: '전력 블랙홀', reqTech: 'smart_grid' },
 
     // [2] 에너지 (Energy) - 전력 생산
     { id: 'coal_plant', name: '석탄발전', icon: '🌑', type: 'energy', cost: 60, rev: 5, exp: 5, emit: 30, power: 30, w:1, h:1, desc: '싸고 강력한 오염' },
@@ -78,9 +82,9 @@ export const BUILDINGS = [
     { id: 'smart_city', name: '스마트시티', icon: '🏙️', type: 'infra', cost: 300, rev: 50, exp: 15, emit: -10, power: -10, w:2, h:2, desc: '2x2 미래 주거', reqTech: 'green_infra' },
 ];
 
-// 4. 이벤트 목록 (랜덤 발생)
+// 4. 이벤트 목록 (룰렛용)
 export const EVENTS = [
-    { name: '기록적 폭염', msg: '냉방 수요 폭증! (전력 소모 급증)', effect: (s) => { s.weekPower -= 15; return '전력 -15'; } },
+    { name: '기록적 폭염', msg: '냉방 수요 폭증! (전력 -15)', effect: (s) => { s.weekPower -= 15; return '전력난 심화'; } },
     { name: '태풍 상륙', msg: '시설물 침수 피해 발생', effect: (s) => { 
         let dmg = 80; s.money -= dmg; return `복구비 -${dmg}`; 
     }},
@@ -91,5 +95,5 @@ export const EVENTS = [
         let bonus = s.rep > 25 ? 100 : 0; s.money += bonus; return bonus > 0 ? `상금 +${bonus}` : '조건 미달 (평판 부족)';
     }},
     { name: '기술 혁신', msg: '발전 효율 증가', effect: (s) => { s.weekPower += 20; return '전력 +20'; } },
-    { name: '평온한 한해', msg: '특별한 사건 없이 지나갔습니다.', effect: () => '특이사항 없음' }
+    { name: '평온한 한해', msg: '특별한 사건 없이 지나갔습니다.', effect: () => '무탈함' }
 ];
