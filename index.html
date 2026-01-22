@@ -3,171 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Net Zero City: Ultimate</title>
+    <title>Eco Runner: Operation Net Zero</title>
     <link rel="stylesheet" href="style.css">
-</head>
+    </head>
 <body>
+    <div id="game-container">
+        <div id="background-layer"></div>
 
-    <div id="intro-screen" class="intro-overlay">
-        <div class="intro-content">
-            <h1 class="intro-logo">🏙️ Net Zero City <span class="version">V4.0</span></h1>
-            <p class="intro-desc">
-                기후 위기에 맞서는 시장이 되어주세요.<br>
-                지형을 고려하고, 정책을 결정하며 탄소 중립을 달성해야 합니다.
-            </p>
-            
-            <div id="step-map" class="intro-step">
-                <h3>🗺️ 도시의 환경을 선택하세요</h3>
-                <div class="selection-grid" id="map-list">
-                    </div>
-            </div>
+        <canvas id="game-canvas"></canvas>
 
-            <div id="step-leader" class="intro-step hidden">
-                <h3>👤 시장(Leader)을 선택하세요</h3>
-                <div class="selection-grid" id="intro-leader-list">
-                    </div>
+        <div id="ui-hud" class="hidden">
+            <div class="hud-top">
+                <div class="score-box">
+                    <span class="label">정화 점수</span>
+                    <span id="score-value">0</span>
+                </div>
+                <div class="coin-box">
+                    <span class="label">에코 포인트</span>
+                    <span id="coin-value">0</span>
+                </div>
             </div>
             
-            <div class="intro-controls">
-                <button id="btn-back-step" class="btn-secondary hidden">이전</button>
-                <button id="btn-intro-action" class="btn-start" disabled>맵을 선택하세요</button>
+            <div class="hud-bottom">
+                <div class="status-bar-container">
+                    <span class="icon">🌍</span>
+                    <div class="progress-bar">
+                        <div id="co2-bar" style="width: 0%;"></div>
+                    </div>
+                    <span class="label warning">지구 온난화 지수</span>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="layout-container">
+        <div id="ui-intro" class="ui-screen active">
+            <div class="title-area">
+                <h1>ECO RUNNER</h1>
+                <p>Operation Net Zero</p>
+            </div>
+            <div class="menu-area">
+                <button id="btn-start" class="btn primary">작전 시작</button>
+                <button id="btn-shop" class="btn secondary">연구소 (상점)</button>
+            </div>
+            <div class="footer-area">
+                <p>지구 온난화가 임계점에 도달하기 전에 탄소를 정화하세요.</p>
+            </div>
+        </div>
+
+        <div id="ui-gameover" class="ui-screen hidden">
+            <div class="result-box">
+                <h2>MISSION FAILED</h2>
+                <p>온난화 지수가 임계치를 초과했습니다.</p>
+                <div class="stat-row">
+                    <span>최종 정화 점수:</span>
+                    <span id="final-score">0</span>
+                </div>
+                <div class="stat-row">
+                    <span>획득 에코 포인트:</span>
+                    <span id="final-coins">0</span>
+                </div>
+                <button id="btn-restart" class="btn primary">다시 도전</button>
+                <button id="btn-home" class="btn secondary">메인으로</button>
+            </div>
+        </div>
+
+        <div id="ui-shop" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>친환경 연구소</h2>
+                    <span class="close-modal" id="btn-close-shop">&times;</span>
+                </div>
+                <div class="shop-balance">
+                    보유 포인트: <span id="shop-coin-display">0</span> EP
+                </div>
+                <div id="shop-items-container" class="shop-grid">
+                    </div>
+            </div>
+        </div>
         
-        <div class="main-area">
-            <header class="hud">
-                <div class="hud-top">
-                    <span class="logo">🌿 NZC</span>
-                    <span class="week-badge">Year <span id="ui-year">1</span></span>
-                    <span id="ui-map-type" class="map-badge">평지</span>
-                </div>
-                
-                <div class="stats-bar">
-                    <div class="stat-item" title="보유 자금">
-                        💰 <span id="ui-money" class="val">0</span>
-                    </div>
-                    <div class="stat-item" title="주간 탄소 배출량">
-                        🏭 <span id="ui-emit" class="val danger">0t</span>
-                    </div>
-                    <div class="stat-item" title="도시 만족도">
-                        ⭐ <span id="ui-rep" class="val">0</span>
-                    </div>
-                    <div class="stat-item" title="전력망 (생산 - 소비)">
-                        ⚡ <span id="ui-infra" class="val">0</span>
-                    </div>
-                </div>
-            </header>
-
-            <main class="city-viewport">
-                <div class="city-grid" id="city-grid"></div>
-                
-                <div id="tooltip" class="tooltip hidden"></div>
-                
-                <div id="achievement-toast" class="toast hidden">
-                    <div class="toast-icon">🏆</div>
-                    <div class="toast-content">
-                        <h4 id="ach-title">업적 달성!</h4>
-                        <p id="ach-desc">내용</p>
-                    </div>
-                </div>
-            </main>
-
-            <footer class="msg-bar">
-                <div id="ui-message">도시 건설을 시작하세요!</div>
-            </footer>
-        </div>
-
-        <aside class="side-panel">
-            <div class="main-tabs">
-                <button class="main-tab-btn active" onclick="game.switchMainTab('build')">🏗️ 건설</button>
-                <button class="main-tab-btn" onclick="game.switchMainTab('research')">🔬 연구</button>
-                <button class="main-tab-btn" onclick="game.switchMainTab('log')">📜 기록</button>
-            </div>
-
-            <div id="panel-build" class="panel-content">
-                <div class="sub-tabs">
-                    <button class="sub-tab-btn active" data-type="growth" onclick="game.filterBuild('growth')">성장</button>
-                    <button class="sub-tab-btn" data-type="energy" onclick="game.filterBuild('energy')">에너지</button>
-                    <button class="sub-tab-btn" data-type="circular" onclick="game.filterBuild('circular')">순환</button>
-                    <button class="sub-tab-btn" data-type="infra" onclick="game.filterBuild('infra')">인프라</button>
-                </div>
-                <div class="list-container" id="building-list"></div>
-            </div>
-
-            <div id="panel-research" class="panel-content hidden">
-                <div class="list-container" id="research-list"></div>
-            </div>
-
-            <div id="panel-log" class="panel-content hidden">
-                <div class="list-container" id="log-list"></div>
-            </div>
-
-            <div class="panel-footer">
-                <button id="btn-cancel-select" class="btn-secondary hidden" onclick="game.cancelSelection()">선택 취소 (ESC)</button>
-                <button id="btn-next-week" class="btn-main">📅 연말 정산</button>
-            </div>
-        </aside>
-    </div>
-
-    <div id="policy-modal" class="modal hidden">
-        <div class="modal-content policy-content">
-            <h3>📜 정책 안건 상정</h3>
-            <p class="policy-intro">시 의회에 새로운 안건이 올라왔습니다.</p>
-            
-            <div class="policy-card">
-                <h2 id="policy-title">노후 경유차 운행 제한</h2>
-                <p id="policy-desc" class="policy-desc">도심 내 등급이 낮은 차량의 운행을 제한하여 대기질을 개선합니다.</p>
-                
-                <div class="policy-options">
-                    <button class="btn-policy approve" onclick="game.decidePolicy(true)">
-                        <span class="btn-tag">승인</span>
-                        <div id="policy-effect-y" class="policy-effect">평판+5, 탄소-2</div>
-                    </button>
-                    <button class="btn-policy reject" onclick="game.decidePolicy(false)">
-                        <span class="btn-tag">거부</span>
-                        <div id="policy-effect-n" class="policy-effect">변동 없음</div>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="roulette-modal" class="modal hidden">
-        <div class="modal-content">
-            <h3>📅 연말 이벤트</h3>
-            <div class="roulette-box">
-                <div id="roulette-display">🎲 추첨 중...</div>
-            </div>
-            <div id="roulette-result" class="hidden">
-                <p id="roulette-desc"></p>
-                <button class="btn-main" onclick="game.finishYear()">결과 확인</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="report-modal" class="modal hidden">
-        <div class="modal-content report-content">
-            <h3>📊 결산 리포트</h3>
-            <div id="report-details" class="report-body"></div>
-            <button class="btn-main" onclick="closeModal('report-modal')">다음 해 시작</button>
-        </div>
-    </div>
-    
-    <div id="gameover-modal" class="modal hidden">
-        <div class="modal-content" style="border: 2px solid #e74c3c;">
-            <h2 style="color:#e74c3c">💸 파산했습니다!</h2>
-            <p>예산이 바닥나 도시 운영이 중단되었습니다.</p>
-            <p id="final-score" style="font-weight:bold; margin:20px 0;"></p>
-            <button class="btn-main" onclick="location.reload()">다시 시작하기</button>
-        </div>
+        <div id="toast-container"></div>
     </div>
 
     <script type="module" src="js/app.js"></script>
-    <script>
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-    </script>
 </body>
 </html>
