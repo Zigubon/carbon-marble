@@ -1,9 +1,19 @@
 /**
- * [2026-01-23] Eco Runner Game Engine (Ultimate Stable Version)
- * 이슈 해결: 점수 7점 멈춤(아이템 생성 충돌 방지), 화면 안 나옴(리사이즈 강제 보정)
+ * [2026-01-23] Eco Runner Game Engine (Graphic Update)
+ * 설명: SVG Data URI를 활용하여 별도 파일 다운로드 없이 그래픽 렌더링 구현
  */
 
-import { CONFIG, OBSTACLES, ITEMS, UPGRADES, Logger } from './data.js';
+import { CONFIG, OBSTACLES, ITEMS, UPGRADES, PLAYER_IMG } from './data.js';
+
+// === Image Loader (이미지 캐싱) ===
+const assets = {};
+function loadAsset(key, src) {
+    if (assets[key]) return assets[key];
+    const img = new Image();
+    img.src = src;
+    assets[key] = img;
+    return img;
+}
 
 // === Storage & UI Manager ===
 class StorageManager {
@@ -55,7 +65,7 @@ class UIManager {
             this.elements.co2Bar.style.backgroundColor = safeCo2 > 80 ? '#e74c3c' : (safeCo2 > 50 ? '#f39c12' : '#2ecc71');
         }
     }
-
+    
     showToast(message) {
         const container = document.getElementById('toast-container');
         if(!container) return;
@@ -65,7 +75,7 @@ class UIManager {
         container.appendChild(toast);
         setTimeout(() => toast.remove(), 2500);
     }
-    
+
     renderShop(playerData, buyCallback) {
         if(!this.elements.shopCoins) return;
         this.elements.shopCoins.textContent = playerData.coins;
@@ -95,10 +105,9 @@ class UIManager {
 // === Player Class ===
 class Player {
     constructor(canvasHeight, upgrades) {
-        this.width = 44; 
-        this.height = 44;
+        this.width = 50; 
+        this.height = 50;
         this.x = 50; 
-        // 바닥 위치 보정 (최소 200px 확보)
         const safeHeight = Math.max(canvasHeight, 200);
         this.groundY = safeHeight - 100 - this.height; 
         this.y = this.groundY;
@@ -106,8 +115,10 @@ class Player {
         this.isJumping = false;
         this.jumpCount = 0;
         this.maxJumps = 2;
-        this.color = '#2ecc71'; 
         this.upgrades = upgrades || {};
+        
+        // 이미지 로드
+        this.image = loadAsset('player', PLAYER_IMG);
     }
 
     jump() {
@@ -119,7 +130,6 @@ class Player {
     }
 
     update(canvasHeight) {
-        // 리사이즈로 인해 바닥 높이가 변했을 경우 갱신
         if (canvasHeight) {
              const safeHeight = Math.max(canvasHeight, 200);
              this.groundY = safeHeight - 100 - this.height;
@@ -137,13 +147,13 @@ class Player {
     }
 
     draw(ctx) {
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-        
-        ctx.fillStyle = 'white';
-        ctx.fillRect(this.x + 24, this.y + 10, 12, 12);
-        ctx.fillStyle = 'black';
-        ctx.fillRect(this.x + 30, this.y + 12, 6, 6);
+        if (this.image.complete) {
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        } else {
+            // 로딩 전 백업 도형
+            ctx.fillStyle = '#2ecc71';
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
     }
 }
 
@@ -152,8 +162,8 @@ class GameObject {
     constructor(def, canvasWidth, canvasHeight) {
         this.def = def;
         this.x = canvasWidth;
-        this.width = def.width || 30; // 방어 코드
-        this.height = def.height || 30;
+        this.width = def.width || 40;
+        this.height = def.height || 40;
         this.markedForDeletion = false;
         this.collisionProcessed = false;
 
@@ -162,8 +172,12 @@ class GameObject {
         } else if (def.yPos === 'ground' || !def.yPos) {
             this.y = canvasHeight - 100 - this.height;
         } else {
-            // 아이템 등 기타
             this.y = canvasHeight - 150 - Math.random() * 150;
+        }
+        
+        // 이미지 로드
+        if (def.imgSrc) {
+            this.image = loadAsset(def.type, def.imgSrc);
         }
     }
 
@@ -173,20 +187,18 @@ class GameObject {
     }
 
     draw(ctx) {
-        ctx.fillStyle = this.def.color || '#fff';
-        // 아이템인 경우 (점수나 화폐가 있는 경우)
-        if (this.def.score || this.def.currency) {
-            ctx.beginPath();
-            const cx = this.x + this.width/2;
-            const cy = this.y + this.height/2;
-            const r = this.width/2;
-            // 좌표가 유효할 때만 그리기 (에러 방지)
-            if (!isNaN(cx) && !isNaN(cy) && r > 0) {
-                ctx.arc(cx, cy, r, 0, Math.PI * 2);
-                ctx.fill();
-            }
+        if (this.image && this.image.complete) {
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         } else {
-            ctx.fillRect(this.x, this.y, this.width, this.height);
+            // 백업 도형
+            ctx.fillStyle = this.def.color || '#fff';
+            if (this.def.score) {
+                ctx.beginPath();
+                ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width/2, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
         }
     }
 }
@@ -204,7 +216,6 @@ class Game {
         this.state = 'INTRO'; 
         this.userData = StorageManager.load();
         
-        // 초기화
         this.reset();
         this.bindEvents();
         
@@ -214,8 +225,7 @@ class Game {
 
     resize() {
         const container = this.canvas.parentElement;
-        // 컨테이너 크기가 0이면 윈도우 크기로 강제 설정 (안전장치)
-        if (container && container.clientWidth > 0 && container.clientHeight > 0) {
+        if (container && container.clientWidth > 0) {
             this.width = this.canvas.width = container.clientWidth;
             this.height = this.canvas.height = container.clientHeight;
         } else {
@@ -306,26 +316,20 @@ class Game {
     spawnObjects() {
         this.frameCount++;
         try {
-            // 장애물 생성
             if (this.frameCount % CONFIG.SPAWN_RATE_OBSTACLE === 0 && OBSTACLES.length > 0) {
                 const def = OBSTACLES[Math.floor(Math.random() * OBSTACLES.length)];
                 this.obstacles.push(new GameObject(def, this.width, this.height));
             }
-            // 아이템 생성 (여기서 멈춤 현상 발생 가능성이 높음 -> try catch로 보호)
             if (this.frameCount % CONFIG.SPAWN_RATE_ITEM === 0 && ITEMS.length > 0) {
                 const def = ITEMS[Math.floor(Math.random() * ITEMS.length)];
                 this.items.push(new GameObject(def, this.width, this.height));
             }
-        } catch (e) {
-            console.error("Spawn Error:", e);
-        }
+        } catch (e) { console.error(e); }
     }
 
     update(deltaTime) {
         if (this.state !== 'PLAYING') return;
         
-        const safeDelta = Math.min(deltaTime, 50);
-
         if (this.gameSpeed < CONFIG.GAME_SPEED_MAX) this.gameSpeed += 0.001;
         this.co2Level += (CONFIG.CO2_PASSIVE_INCREASE - this.passiveCo2Reduction);
         
@@ -343,7 +347,6 @@ class Game {
         this.obstacles.forEach(o => o.update(this.gameSpeed));
         this.items.forEach(i => i.update(this.gameSpeed));
         
-        // 안전한 필터링
         this.obstacles = this.obstacles.filter(o => !o.markedForDeletion);
         this.items = this.items.filter(i => !i.markedForDeletion); 
 
@@ -355,38 +358,28 @@ class Game {
         const p = this.player;
         const safeUpgrades = this.userData.upgrades || {};
         
-        // 장애물
+        // 간단한 AABB 충돌 체크 (이미지 크기 고려)
+        const check = (a, b) => {
+            return a.x < b.x + b.width && a.x + a.width > b.x &&
+                   a.y < b.y + b.height && a.y + a.height > b.y;
+        };
+        
         this.obstacles.forEach(obs => {
-            if (!obs.collisionProcessed && 
-                p.x < obs.x + obs.width && p.x + p.width > obs.x &&
-                p.y < obs.y + obs.height && p.y + p.height > obs.y) {
-                
+            if (!obs.collisionProcessed && check(p, obs)) {
                 obs.collisionProcessed = true;
-                
                 let damage = obs.def.damage || 10;
-                const filterLevel = safeUpgrades.filter || 0;
-                damage = damage * (1 - (filterLevel * 0.1));
-
+                damage = damage * (1 - ((safeUpgrades.filter || 0) * 0.1));
                 this.co2Level += damage;
                 this.ui.showToast(`⚠️ ${obs.def.name} 충돌!`);
             }
         });
         
-        // 아이템
         this.items.forEach((item) => {
-             if (!item.markedForDeletion && 
-                p.x < item.x + item.width && p.x + p.width > item.x &&
-                p.y < item.y + item.height && p.y + p.height > item.y) {
-                
+             if (!item.markedForDeletion && check(p, item)) {
                 item.markedForDeletion = true;
-                
-                if (item.def.currency) {
-                    this.sessionCoins += item.def.currency;
-                    this.ui.showToast(`💰 +${item.def.currency}`);
-                } else {
-                    this.score += (item.def.score || 0);
-                    const reduction = item.def.co2Reduction || 0;
-                    this.co2Level = Math.max(0, this.co2Level - reduction);
+                if (item.def.score) {
+                    this.score += item.def.score;
+                    this.co2Level = Math.max(0, this.co2Level - (item.def.co2Reduction||0));
                     this.ui.showToast(`🌿 ${item.def.name} 획득!`);
                 }
             }
@@ -394,10 +387,9 @@ class Game {
     }
 
     draw() {
-        // 화면 지우기
         this.ctx.clearRect(0, 0, this.width, this.height);
 
-        // 바닥 그리기 (안전장치: 높이가 0이 아닐 때만)
+        // 지면
         if (this.height > 100) {
             this.ctx.fillStyle = '#4CAF50';
             this.ctx.fillRect(0, this.height - 100, this.width, 100);
@@ -408,27 +400,19 @@ class Game {
                 this.obstacles.forEach(o => o.draw(this.ctx));
                 this.items.forEach(i => i.draw(this.ctx));
                 this.player.draw(this.ctx);
-            } catch(e) {
-                // 그리기 에러가 나도 루프는 멈추지 않음
-            }
+            } catch(e) {}
         }
     }
 
     animate(timeStamp) {
         const deltaTime = timeStamp - this.lastTime;
         this.lastTime = timeStamp;
-
         try {
             this.update(deltaTime);
             this.draw();
-        } catch (e) {
-            console.error("Game Loop Critical Error:", e);
-        }
-        
+        } catch (e) { console.error(e); }
         requestAnimationFrame(this.animate.bind(this));
     }
 }
 
-window.onload = () => {
-    new Game();
-};
+window.onload = () => { new Game(); };
