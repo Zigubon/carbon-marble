@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eco Runner: Operation Net Zero</title>
     <link rel="stylesheet" href="style.css">
-    </head>
+</head>
 <body>
     <div id="game-container">
         <div id="background-layer"></div>
@@ -14,14 +14,17 @@
 
         <div id="ui-hud" class="hidden">
             <div class="hud-top">
-                <div class="score-box">
-                    <span class="label">정화 점수</span>
-                    <span id="score-value">0</span>
+                <div class="score-area">
+                    <div class="score-box">
+                        <span class="label">정화 점수</span>
+                        <span id="score-value">0</span>
+                    </div>
+                    <div class="coin-box">
+                        <span class="label">에코 포인트</span>
+                        <span id="coin-value">0</span>
+                    </div>
                 </div>
-                <div class="coin-box">
-                    <span class="label">에코 포인트</span>
-                    <span id="coin-value">0</span>
-                </div>
+                <button id="btn-pause" class="icon-btn">⏸️</button>
             </div>
             
             <div class="hud-bottom">
@@ -31,6 +34,16 @@
                         <div id="co2-bar" style="width: 0%;"></div>
                     </div>
                     <span class="label warning">지구 온난화 지수</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="ui-pause" class="modal hidden">
+            <div class="modal-content small-modal">
+                <h2>일시 정지</h2>
+                <div class="menu-area">
+                    <button id="btn-resume" class="btn primary">계속 하기</button>
+                    <button id="btn-quit" class="btn secondary">메인으로 (종료)</button>
                 </div>
             </div>
         </div>
@@ -75,8 +88,7 @@
                 <div class="shop-balance">
                     보유 포인트: <span id="shop-coin-display">0</span> EP
                 </div>
-                <div id="shop-items-container" class="shop-grid">
-                    </div>
+                <div id="shop-items-container" class="shop-grid"></div>
             </div>
         </div>
         
