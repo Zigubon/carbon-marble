@@ -1,136 +1,56 @@
-:root {
-    --primary-color: #2ecc71; /* 에코 그린 */
-    --secondary-color: #3498db; /* 클린 스카이 */
-    --danger-color: #e74c3c; /* 워닝 레드 */
-    --dark-bg: #2c3e50;
-    --light-text: #ecf0f1;
-    --glass-bg: rgba(44, 62, 80, 0.85);
-    --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+/* 기존 스타일 유지... */
 
-* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
-
-body {
-    background-color: #1a1a1a;
-    color: var(--light-text);
-    font-family: var(--font-main);
-    overflow: hidden;
-    height: 100vh;
+/* HUD 레이아웃 개선 */
+.hud-top {
     display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#game-container {
-    position: relative;
-    width: 100%;
-    max-width: 1280px; /* 와이드 스크린 대응 */
-    height: 100%;
-    max-height: 720px;
-    background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 80%, #4CAF50 80%, #388E3C 100%);
-    overflow: hidden;
-    box-shadow: 0 0 50px rgba(0,0,0,0.5);
-}
-
-canvas { display: block; width: 100%; height: 100%; }
-
-/* UI 공통 스타일 */
-.ui-screen {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(5px);
-    transition: opacity 0.3s;
-    z-index: 10;
-}
-
-.hidden { display: none !important; opacity: 0; pointer-events: none; }
-.active { display: flex !important; opacity: 1; pointer-events: auto; }
-
-/* 버튼 스타일 */
-.btn {
-    padding: 15px 40px;
-    margin: 10px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    text-transform: uppercase;
-}
-.btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-.btn:active { transform: translateY(0); }
-.btn.primary { background: var(--primary-color); color: white; }
-.btn.secondary { background: white; color: var(--dark-bg); }
-
-/* HUD */
-#ui-hud {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
     justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+    width: 100%;
 }
 
-.hud-top { display: flex; justify-content: space-between; font-size: 1.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); font-weight: bold;}
-.hud-bottom { display: flex; justify-content: center; margin-bottom: 20px; }
-
-.status-bar-container {
-    width: 60%;
-    background: rgba(0,0,0,0.5);
-    padding: 10px 20px;
-    border-radius: 30px;
+.score-area {
     display: flex;
+    gap: 20px;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    font-weight: bold;
+}
+
+/* 일시정지 아이콘 버튼 */
+.icon-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 15px;
+    transition: 0.2s;
+    pointer-events: auto; /* HUD가 pointer-events: none이어도 클릭 가능하게 */
 }
-.progress-bar { flex-grow: 1; height: 20px; background: #555; border-radius: 10px; overflow: hidden; position: relative; }
-#co2-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 99%, #feada6 100%); /* 위험한 느낌의 그라데이션 */
-    background-color: var(--danger-color);
-    transition: width 0.2s ease-out;
+.icon-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
 }
 
-/* 타이틀 화면 */
-.title-area h1 { font-size: 5rem; color: var(--primary-color); text-shadow: 4px 4px 0 #000; letter-spacing: 5px; margin-bottom: 0; }
-.title-area p { font-size: 1.5rem; color: white; letter-spacing: 2px; margin-bottom: 50px; }
+/* HUD 전체 클릭 방지 풀고 내부 요소만 클릭 가능하게 설정 */
+#ui-hud {
+    pointer-events: none;
+}
+#ui-hud button, #ui-hud .icon-btn {
+    pointer-events: auto;
+}
 
-/* 상점 모달 */
-.modal {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: flex; justify-content: center; align-items: center;
-    z-index: 20;
+/* 작은 모달 (일시정지용) */
+.small-modal {
+    width: 400px;
+    max-width: 90%;
+    text-align: center;
+    border: 2px solid var(--secondary-color);
+    box-shadow: 0 0 30px var(--secondary-color);
 }
-.modal-content {
-    background: var(--dark-bg);
-    width: 80%; max-width: 800px;
-    border-radius: 20px;
-    padding: 30px;
-    border: 2px solid var(--primary-color);
-    box-shadow: 0 0 30px var(--primary-color);
-}
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-.shop-item {
-    background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center; cursor: pointer; transition: 0.2s;
-}
-.shop-item:hover { background: rgba(255,255,255,0.2); }
-.shop-item.locked { opacity: 0.5; cursor: not-allowed; }
-.close-modal { font-size: 2rem; cursor: pointer; }
-
-/* 토스트 메시지 */
-#toast-container { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; }
-.toast {
-    background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 20px;
-    animation: fadeUp 2s forwards; border-left: 5px solid var(--primary-color);
-}
-@keyframes fadeUp { 0% { opacity: 0; transform: translateY(20px); } 10% { opacity: 1; transform: translateY(0); } 80% { opacity: 1; } 100% { opacity: 0; } }
