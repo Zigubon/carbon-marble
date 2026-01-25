@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도시생물다양성지수(CBI) 시뮬레이터</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌿 도시생물다양성지수(CBI) 계산기</h1>
+            <p>싱가포르 지수(Singapore Index) 기반 자가 진단 도구</p>
+        </header>
+
+        <section id="city-profile">
+            <h2>1. 도시 개요 입력</h2>
+            <div class="input-group">
+                <label>도시 전체 면적 (ha):</label>
+                <input type="number" id="totalArea" placeholder="예: 10000">
+            </div>
+            <div class="input-group">
+                <label>도시 전체 인구 (명):</label>
+                <input type="number" id="population" placeholder="예: 500000">
+            </div>
+        </section>
+
+        <form id="cbi-form">
+            <section class="indicator-section">
+                <h3>PART I: 자생 생물다양성</h3>
+                <div class="indicator">
+                    [cite_start]<label><strong>지표 1. 자연지역 면적 (ha)</strong> [cite: 402]</label>
+                    <p class="desc">산림, 습지, 자연초지 등 자연생태계 면적의 합</p>
+                    <input type="number" id="ind1_val" class="calc-input">
+                    <span class="score-display" id="ind1_score">0점</span>
+                </div>
+                </section>
+
+            <section class="indicator-section">
+                <h3>PART II: 생태계 서비스</h3>
+                <div class="indicator">
+                    [cite_start]<label><strong>지표 12. 1인당 여가 서비스 면적 (ha)</strong> [cite: 670]</label>
+                    <p class="desc">공원 및 자연지역 면적 합계 (인구 1,000명당)</p>
+                    <input type="number" id="ind12_val" class="calc-input">
+                    <span class="score-display" id="ind12_score">0점</span>
+                </div>
+            </section>
+
+            <section class="indicator-section">
+                <h3>PART III: 거버넌스 및 관리</h3>
+                <div class="indicator">
+                    [cite_start]<label><strong>지표 17. 생물다양성 전략 수립 여부</strong> [cite: 778]</label>
+                    <select id="ind17_val" class="calc-select">
+                        <option value="0">전략(LBSAP) 없음 (0점)</option>
+                        <option value="1">전략은 있으나 국가전략과 연계 안 됨 (1점)</option>
+                        <option value="2">국가전략 반영 + CBD 이니셔티브 1개 (2점)</option>
+                        <option value="3">국가전략 반영 + CBD 이니셔티브 2개 (3점)</option>
+                        <option value="4">국가전략 반영 + CBD 이니셔티브 3개 이상 (4점)</option>
+                    </select>
+                    <span class="score-display" id="ind17_score">0점</span>
+                </div>
+            </section>
+
+            <button type="button" onclick="calculateTotal()">총점 계산하기</button>
+        </form>
+
+        <section id="result-area">
+            <h2>총점: <span id="total-score">0</span> / 112점</h2>
+            <p id="feedback-msg"></p>
+        </section>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>
