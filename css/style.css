@@ -1,20 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 
-/* 스크롤 강제 활성화 코드 */
+/* [핵심 수정] html, body에 걸린 강제 설정 제거 */
+/* overflow, height 설정을 삭제하여 브라우저가 알아서 전체 스크롤을 만들도록 함 */
 html, body {
-    overflow-y: auto !important; /* 세로 스크롤바 무조건 생성 */
-    height: auto !important;     /* 높이 고정 해제 */
-    min-height: 100%;            /* 최소 높이 확보 */
+    margin: 0;
+    padding: 0;
+    /* 만약 다른 CSS와 충돌하여 스크롤이 안 생긴다면 아래 주석을 해제하세요 */
+    /* overflow-y: visible !important; */
 }
 
 body {
     font-family: 'Noto Sans KR', sans-serif;
     background-color: #f0f7f4;
     color: #333;
-    margin: 0;
+    /* 전체 페이지의 위아래 여백 */
     padding: 20px;
-    /* 모바일 브라우저 하단바에 가려지지 않도록 전체 바디 여백 추가 */
-    padding-bottom: 100px;
+    padding-bottom: 150px; /* 하단 설명이 잘리지 않도록 넉넉한 여백 */
 }
 
 .container {
@@ -24,9 +25,6 @@ body {
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    
-    /* [수정됨] 스크롤을 끝까지 내렸을 때 내용이 잘리지 않도록 하단 내부 여백 대폭 추가 */
-    padding-bottom: 200px;
 }
 
 header {
@@ -87,10 +85,10 @@ h3 {
     padding: 10px; 
     border: 1px solid #ccc; 
     border-radius: 5px; 
-    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+    box-sizing: border-box; 
 }
 
-/* 지표 카드 스타일 (카드 UI) */
+/* 지표 카드 스타일 */
 .indicator-card {
     background: #fff;
     border: 1px solid #eee;
@@ -110,7 +108,7 @@ h3 {
 .indicator-card h4 { 
     margin: 0 0 5px 0; 
     color: #333; 
-    padding-right: 60px; /* 뱃지 공간 확보 */
+    padding-right: 60px; 
 }
 
 .desc { 
@@ -151,11 +149,10 @@ h3 {
     text-align: center;
 }
 
-/* 점수에 따른 뱃지 색상 변화 */
-.result-badge.perfect { background: #2E7D32; color: #fff; } /* 4점 */
-.result-badge.good { background: #66BB6A; color: #fff; }    /* 3점 */
-.result-badge.mid { background: #FFCA28; color: #fff; text-shadow: 0 0 2px rgba(0,0,0,0.1); } /* 1~2점 */
-.result-badge.bad { background: #ef5350; color: #fff; }     /* 0점 */
+.result-badge.perfect { background: #2E7D32; color: #fff; } 
+.result-badge.good { background: #66BB6A; color: #fff; }    
+.result-badge.mid { background: #FFCA28; color: #fff; text-shadow: 0 0 2px rgba(0,0,0,0.1); } 
+.result-badge.bad { background: #ef5350; color: #fff; }     
 
 /* 계산 버튼 스타일 */
 .calc-btn {
@@ -173,17 +170,12 @@ h3 {
     transition: background 0.3s, transform 0.1s;
 }
 
-.calc-btn:hover { 
-    background: #1b5e20; 
-}
-
-.calc-btn:active {
-    transform: scale(0.98);
-}
+.calc-btn:hover { background: #1b5e20; }
+.calc-btn:active { transform: scale(0.98); }
 
 /* 결과 영역 스타일 */
 #result-area {
-    display: none; /* 계산 전에는 숨김 */
+    display: none; 
     margin-top: 40px;
     background: #f1f8e9;
     padding: 30px;
@@ -206,29 +198,10 @@ h3 {
     margin: 20px 0;
 }
 
-.total-score-box {
-    text-align: center;
-}
-
-.total-score-box .label {
-    display: block;
-    font-size: 1.1em;
-    color: #555;
-    margin-bottom: 5px;
-}
-
-.total-score-box .score {
-    font-size: 4em;
-    font-weight: 700;
-    color: #2E7D32;
-    display: block;
-    line-height: 1;
-}
-
-.total-score-box .max {
-    font-size: 1em;
-    color: #888;
-}
+.total-score-box { text-align: center; }
+.total-score-box .label { display: block; font-size: 1.1em; color: #555; margin-bottom: 5px; }
+.total-score-box .score { font-size: 4em; font-weight: 700; color: #2E7D32; display: block; line-height: 1; }
+.total-score-box .max { font-size: 1em; color: #888; }
 
 .part-scores {
     text-align: left;
@@ -237,44 +210,18 @@ h3 {
     border-radius: 10px;
 }
 
-.part-scores p { 
-    font-size: 1.1em; 
-    margin: 8px 0; 
-    color: #444;
-}
+.part-scores p { font-size: 1.1em; margin: 8px 0; color: #444; }
+.part-scores span { font-weight: bold; color: #1565C0; font-size: 1.2em; margin-left: 5px; }
 
-.part-scores span { 
-    font-weight: bold; 
-    color: #1565C0; 
-    font-size: 1.2em;
-    margin-left: 5px;
-}
-
-#feedback-msg {
-    color: #666;
-    margin-top: 15px;
-}
+#feedback-msg { color: #666; margin-top: 15px; }
 
 /* 모바일 반응형 처리 */
 @media (max-width: 600px) {
     .container {
         padding: 20px;
-        padding-bottom: 150px; /* 모바일에서도 하단 여백 유지 */
+        padding-bottom: 150px; 
     }
-
-    .grid-row { 
-        flex-direction: column; 
-        gap: 10px;
-    }
-    
-    .score-summary { 
-        flex-direction: column; 
-        gap: 20px; 
-    }
-    
-    .part-scores {
-        width: 100%;
-        box-sizing: border-box;
-    }
+    .grid-row { flex-direction: column; gap: 10px; }
+    .score-summary { flex-direction: column; gap: 20px; }
+    .part-scores { width: 100%; box-sizing: border-box; }
 }
-
