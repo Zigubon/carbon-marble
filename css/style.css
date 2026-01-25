@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 
+/* 스크롤 강제 활성화 코드 */
+html, body {
+    overflow-y: auto !important; /* 세로 스크롤바 무조건 생성 */
+    height: auto !important;     /* 높이 고정 해제 */
+    min-height: 100%;            /* 최소 높이 확보 */
+}
+
 body {
     font-family: 'Noto Sans KR', sans-serif;
     background-color: #f0f7f4;
@@ -270,3 +277,4 @@ h3 {
         box-sizing: border-box;
     }
 }
+
